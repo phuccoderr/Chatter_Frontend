@@ -1,13 +1,29 @@
-import { useGetUsers } from "./services/useLogin";
+import { Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import { Toaster } from "react-hot-toast";
+import ProtectedRoutes from "./components/common/ProtectedRoutes";
+import { WebsocketProvider, socket } from "./utils/websocket";
 
 function App() {
-  const data = useGetUsers();
-  console.log("data", data);
+  // const data = useGetUsers();
+  // console.log("data", data);
 
   return (
-    <>
-      <h1 className="p-4 pt-2 text-3xl font-bold underline">Hello world!</h1>
-    </>
+    <WebsocketProvider value={socket}>
+      <div className="h-screen bg-black">
+        <div className="container">
+          <Routes>
+            <Route element={<ProtectedRoutes />}>
+              <Route path="/" Component={Home} />
+              <Route path="/:chatId" Component={Home} />
+            </Route>
+            <Route path="/login" Component={Login} />
+          </Routes>
+        </div>
+      </div>
+      <Toaster />
+    </WebsocketProvider>
   );
 }
 
